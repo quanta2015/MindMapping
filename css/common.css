@@ -1,0 +1,14 @@
+.hide {
+    display: none!important;
+}
+
+::-webkit-input-placeholder { 
+  color: #ccc;
+  font-size: 16px;
+}
+
+
+
+.unheight {
+    height: unset!important;
+}

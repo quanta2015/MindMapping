@@ -1,0 +1,12 @@
+
+{{for log}}
+<div class="m-row">
+  <div class="m-id">{{:#index+1}}</div>
+  <div class="m-title">{{:title}}</div>
+  <div class="m-date">{{:createdate}}</div>
+  <div class="m-detail" data-id="{{:id}}">详情</div>
+</div>
+{{/for}}
+
+
+<ul class="simple-pagination m-page" id="log-page"></ul>

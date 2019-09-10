@@ -1,0 +1,40 @@
+<div class="m-log-bs">
+  <div class="m-info">
+    <div class="m-info-col">
+      总共花费时间：<span id="cost-time"></span>
+    </div>
+    <div class="m-info-col">
+      操作手顺数量：<span id="cost-count"></span>
+    </div>
+  </div>
+</div>
+<div class="m-log-dl">
+  {{for logdetail}}
+  <div class="m-row-detail">
+    <div class="m-id">{{:#index+1}}</div>
+    <div class="m-createtime">{{:createtime}}</div>
+    <div class="m-act">{{:act}}</div>
+    <div class="m-item_lv">{{:item_lv}}</div>
+
+    <div class="m-item_id">{{:item_id}}</div>
+    <div class="m-data">{{:data}}</div>
+  </div>
+  {{/for}}
+  <ul class="simple-pagination m-page" id="log-detail-page"></ul>
+</div>
+<div class="m-log-dg">
+  <div class="m-tap">
+    <span class="m-tap-type">操作次数统计图</span>
+    <span class="m-tap-type">单词频率图</span>
+    <span class="m-tap-type">操作时间图</span>
+    <span class="m-btn-trigger">T</span>
+  </div>
+  <div class="m-graph">
+    <div class="m-graph-item" id="cont-act"  ></div>
+    <div class="m-graph-item hide" id="cont-word" ></div>
+    <div class="m-graph-item hide" id="cont-time" ></div>
+  </div>
+</div>
+
+
+
