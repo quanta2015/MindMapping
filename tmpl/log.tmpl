@@ -1,9 +1,20 @@
-
+<div class="m-row m-row-tl">
+  <div class="m-id">ID</div>
+  <div class="m-title">操作代码</div>
+  <div class="m-date">创建时间</div>
+  <div class="m-imgfile">图片</div>
+  <div>功能</div>
+</div>
 {{for log}}
 <div class="m-row">
   <div class="m-id">{{:#index+1}}</div>
-  <div class="m-title">{{:title}}</div>
+  <div class="m-title">{{:~formatId(title)}}</div>
   <div class="m-date">{{:createdate}}</div>
+  <div class="m-imgfile">
+    <a data-fancybox="gallery" data-caption="xxx" href={{:imgfile}}>
+      <img src={{:imgfile}} />
+    </a>
+  </div>
   <div class="m-detail" data-id="{{:id}}">详情</div>
 </div>
 {{/for}}

@@ -1,9 +1,8 @@
-
 var lib = []
 var log = []
-var previous
-var account
-var max 
+var previous, account, max
+var _sTime, _stop
+
 
 init()
 
@@ -15,17 +14,57 @@ function initData() {
     lib.push(item.word)
   })
 
-
+  lib.sort()
   // lib = ["Banana", "Hamburger", "Tomato", "Ice-cream", "Salad"]
-
   max = lib.length
 }
 
 function init() {
+  // $('body').on('click','.m-pic',()=>{
+    
+  //   //隐藏叶子节点的虚线框
+  //   $('.m-child').map((index,item)=>{
+  //     if ($(item).children().length ===0) {
+  //       $(item).hide()
+  //     }
+  //   })
+
+  //   //隐藏功能节点
+  //   $('.m-item-fun').addClass('hide')
+  //   $('.m-item-cnt').addClass('unheight')
+
+  //   html2canvas(document.querySelector(".m-root")).then(async canvas => {
+  //       document.body.appendChild(canvas)
+  //       let blob = await new Promise(r => canvas.toBlob(r, "image/jpeg", .7));
+
+  //       console.log(blob)
+  //   });
+  // })
+
+
 
   $('body').on('click','.m-item-cnt', (e)=>{
     e.stopPropagation();
   })
+
+  $('body').on('mouseover','.m-item-add', (e)=>{
+    $(e.currentTarget).append('<div class="m-popup m-popup-up">增加单词框</div>')
+  }).on('mouseout','.m-item-add', (e)=>{
+    $('.m-popup').remove()
+  })
+
+  $('body').on('mouseover','.m-item-del', (e)=>{
+    $(e.currentTarget).append('<div class="m-popup m-popup-bt">删除单词框</div>')
+  }).on('mouseout','.m-item-del', (e)=>{
+    $('.m-popup').remove()
+  })
+
+  $('body').on('mouseover','.m-item-cnt', (e)=>{
+    $(e.currentTarget).append('<div class="m-popup m-popup-ma m-popup-up">选择单词</div>')
+  }).on('mouseout','.m-item-cnt', (e)=>{
+    $('.m-popup').remove()
+  })
+
   
 
   $('body').on('click','.m-save',doSave)
@@ -55,6 +94,21 @@ function init() {
 }
 
 
+function initTimer() {
+  _sTime = moment()
+  _stop = false
+  _timeHandle = setTimeout(doTimer, 1000)
+}
+
+function doTimer() {
+  $('.m-wl-time').text(caluTime(_sTime))
+
+  if (!_stop) {
+    setTimeout(doTimer, 1000)
+  }
+}
+
+
 function doLog() {
   window.location = 'log.html'
 }
@@ -62,23 +116,34 @@ function doLog() {
 function doStart(e) {
   initData()
   updateLib()
+  initTimer()
   
   let root = '<div class="m-item" data-lv="1" data-id="1"><div class="m-item-cnt"><span class="m-val">请选择</span><select class="s1 hide"></select></div><div class="m-item-fun"><div class="m-item-add">+</div><div class="m-item-del hide">del</div></div><div class="m-child"></div></div>'
   $('.m-root').empty().append(root)
 }
 
-function doSave(e) {
-  $('.m-item-fun').addClass('hide')
-  $('.m-item-cnt').addClass('unheight')
+async function doSave(e) {
+  _stop = true
 
-  let code = account.code
-  let data = {
-    code:code,
-    log:log
-  }
-  console.log(log)
+  // $('.m-item-fun').addClass('hide')
+  // $('.m-item-cnt').addClass('unheight')
 
-  promise('post','/save',JSON.stringify(data), true, (e)=>{
+  let file = await canvas2Blob()
+  var formData = new FormData()
+  formData.append('file',file,'upload.jpg')
+  formData.append("code", account.code)
+  formData.append("log",  JSON.stringify(log))
+
+  $.ajax({    
+    url: 'http://localhost:8080/save',
+    type: 'POST',
+    data: formData,
+    async:false,
+    cache: false,
+    dataType: "json",
+    processData: false,
+    contentType: false
+  }).then(e=>{
     if (e.code === 200) {
       toastr.error('保存成功！');
       $('.m-save').addClass('hide');
@@ -86,6 +151,21 @@ function doSave(e) {
       toastr.error('保存失败！');
     }
   })
+
+  // let code = account.code
+  // let data = {
+  //   code:code,
+  //   log:log
+  // }
+
+  // promise('post','/save',JSON.stringify(data), true, (e)=>{
+  //   if (e.code === 200) {
+  //     toastr.error('保存成功！');
+  //     $('.m-save').addClass('hide');
+  //   }else{
+  //     toastr.error('保存失败！');
+  //   }
+  // })
 }
 
 
@@ -99,7 +179,8 @@ function doShowSel(e) {
 
 //刷新单词库显示
 function updateLib() {
-  $('.m-wl-c').text(lib.length)
+  $('.m-wl-count').text(lib.length)
+  $('.m-wl-time').text('0:00:00')
   $('.m-wl-l').empty()
   lib.map((e,index)=>{
     let item = `<span class="m-word">${e}</span>`
@@ -114,6 +195,7 @@ function doChange(e) {
   let val = t.value
   if (previous!=='') {
     lib.push(previous)
+    lib.sort()
     type = 'change'
   }else{
     type = 'select'
@@ -229,6 +311,13 @@ function addLog(act, level, id, params) {
     params:params
   })
 }
+
+
+
+
+
+
+
 
 
 

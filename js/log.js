@@ -98,7 +98,7 @@ function initLog() {
       $('.m-log-list').append($.templates(r).render(e.data, rdHelper))
       
       let COUNT = e.data.log.length
-      let SIZE = 15
+      let SIZE = 7
       let items = $('.m-row');
       items.slice(SIZE).hide();
 

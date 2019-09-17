@@ -12,3 +12,52 @@
 .unheight {
     height: unset!important;
 }
+
+
+.m-popup {
+    position: absolute;
+    width: 80px;
+    z-index: 999;
+    color: #fff;
+    background: #0066aa;
+    padding: 3px;
+    left: -25px;
+    text-align: center;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.m-popup:before {
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    left: 35px;
+    border: 6px solid transparent;
+    display: block;
+}
+
+.m-popup-ma {
+  left: 0px;
+  top: -35px;
+}
+
+.m-popup-up {
+  top: -35px;
+}
+
+.m-popup-bt {
+  bottom: -35px;
+}
+
+.m-popup-up:before {
+    bottom: -11px;
+    border-top: 10px solid #0066aa;
+}
+
+.m-popup-bt:before {
+    top: -11px;
+    border-bottom: 10px solid #0066aa;
+}
+
+

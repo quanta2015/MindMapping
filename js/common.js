@@ -114,6 +114,10 @@ var rdHelper = {
   formatIconURLHonor: function (img) {  
     img = img.replace('honor/honor','icon/icon-honor');
     return BASE + '/' + img;
+  },
+  formatId: function(id) {
+    let nid = sha256(id).substr(0,8).toUpperCase()
+    return nid
   }
 }
 
@@ -145,3 +149,66 @@ function getUrlVars()
 }
 
 
+
+function caluTime(s) {
+  let e = moment()
+  var duration = moment.duration(e.diff(s));
+  var m = {
+    hours: `${parseInt(duration.asHours(), 10)}`,
+    minutes: `${parseInt(duration.asMinutes()) % 60}`,
+    seconds: `${parseInt(duration.asSeconds()) % 60}`,
+    toString: function() {
+        let m = `00${this.minutes}`.substr(this.minutes.length);
+        let s = `00${this.seconds}`.substr(this.seconds.length);
+        return `${this.hours}:${m}:${s}`;
+    }
+  }
+  return m.toString()
+}
+
+
+async function canvas2Blob() {
+  // 隐藏叶子节点的虚线框
+  $('.m-child').map((index,item)=>{
+    if ($(item).children().length ===0) {
+      $(item).hide()
+    }
+  })
+
+  //隐藏功能节点
+  $('.m-item-fun').addClass('hide')
+  $('.m-item-cnt').addClass('unheight')
+
+  let ret = await html2canvas(document.querySelector(".m-root")).then(async canvas => {
+    // document.body.appendChild(canvas)
+    let blob = await new Promise(r => canvas.toBlob(r, "image/jpeg", .7));
+    return blob
+  });
+
+  return ret
+}
+
+
+
+
+
+
+
+
+function promiseUpload(url,file,cb){
+  // $("body").append(LOADER)
+  var formData = new FormData();
+  formData.append("file", file);
+  $.ajax({    
+    url: HOST + url,
+    type: 'POST',
+    data: formData,
+    async:false,
+    cache: false,
+    dataType: "json",
+    processData: false,
+    contentType: false
+  }).success(e=>{
+    
+  })
+}

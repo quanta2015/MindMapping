@@ -53,6 +53,7 @@ body {
 
 .m-log {
     display: flex;
+    font-family: 'Courier New';
 }
 
 .m-log-list {
@@ -108,11 +109,18 @@ body {
 }
 
 .m-title {
-    width: 200px;
+    width: 100px;
+/*    font-weight: 600;
+    color: #666;*/
 }
 
 .m-date {
-    width: 180px;
+    width: 140px;
+}
+
+.m-imgfile {
+    flex: 1;
+    text-align: center;
 }
 
 .m-page {
@@ -193,4 +201,17 @@ body {
 .m-graph-item {
     flex: 1;
     width: 100%;
+}
+
+.m-imgfile img {
+    width: 100px;
+    height: 60px;
+    border: 1px solid #ddd;
+    padding: 0 5px;
+}
+
+
+.m-row-tl {
+    background: #666;
+    color: #fff!important;
 }

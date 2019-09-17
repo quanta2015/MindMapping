@@ -46,7 +46,7 @@ body {
 }
 
 .m-root {
-    width: 100%;
+    /*width: 100%;*/
     height: 100%;
 }
 
@@ -58,21 +58,34 @@ body {
     box-shadow: 2px 2px 2px #eee;
 }
 
-/*.m-wl-l {
-    padding: 5px;
-}
-*/
+
 
 .m-wl-c {
-    width: 100px;
+    flex-basis: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 24px;
-    padding: 0 10px;
+    /*padding: 0 10px;*/
     background: #ff3300;
     color: #fff;
     margin-right: 5px;
+    flex-direction: column;
+}
+
+
+.m-wl-time {
+    background: #666;
+    font-size: 16px;
+    width: 100%;
+    text-align: center;
+}
+
+.m-wl-count {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
 }
 
 .m-item {
@@ -80,24 +93,28 @@ body {
     font-size: 12px;
     color: #fff;
     align-items: center;
-    margin: 5px;
+    /*margin: 5px;*/
+    margin: 5px 0 5px 5px;
 }
 
-.m-root {
-}
 
 .m-item-cnt {
-    padding: 5px 10px;
+    /*padding: 5px 10px;*/
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     background: #eee;
     color: #666;
-    height: 40px;
+    /*height: 40px;*/
     width: 80px;
+    cursor: pointer;
+    position: relative;
+    padding-left: 10px; 
 }
 
-
+.m-item-cnt:hover {
+    background: #dbe6e8
+}
 
 .m-item-fun {
     display: flex;
@@ -108,22 +125,34 @@ body {
 .m-item-fun>div {
     padding: 0 10px;
     flex: 1;
+    cursor: pointer;
+    transition: .3s;
+    position: relative;
 }
 
 .m-item-add {
     background: #ff6600;
 }
 
+.m-item-add:hover {
+    background: #ff0000;
+}
+
 .m-item-del {
     background: #339966;
 }
 
+.m-item-del:hover {
+    background: #33aa66;
+}
 
 
 .m-child {
     min-width: 10px;
     min-height: 20px;
-    border: 1px dashed #ccc;
+    border-left: 1px solid #ccc;
+    /*border: 1px dashed #ccc;*/
+    /*margin: 0 5px;*/
     margin: 5px;
 }
 
@@ -141,6 +170,27 @@ body {
     padding: 2px 5px;
     margin: 5px 5px 0 0;
     color: #fff;
+    width: 85px;
+}
+
+.m-word:first-letter,.m-val:first-letter {
+    font-size: 14px;
+    color: #ff3300;
+    font-weight: bold;
+    margin-right: 2px;
 }
 
 
+.m-wl-l {
+    flex: 1;
+}
+
+
+
+.m-item:first-child {
+    margin-top: 0;
+}
+
+.m-item:last-child {
+    margin-bottom: 0;
+}

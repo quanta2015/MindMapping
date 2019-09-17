@@ -11,6 +11,7 @@ var url = require('url')
 var db = require("./db/db")
 var jwt= require('jsonwebtoken')
 var conf = require('./db/conf')
+var formidable = require('formidable')
 
 const valid = (d) => { return ((typeof(d) != 'undefined')&&(d.length !== 0))?true:false }
 const frmat = (d) => { return d.sort().join('|') }
@@ -75,22 +76,63 @@ app.post('/login', function(req, res) {
 app.post('/save', function(req, res) {
   let sql  = `CALL SAVELOG(?)`;
   let params = {
-    code: req.body.code,
-    log: req.body.log,
+    code: null,
+    log: null,
+    file: null
   } 
 
-  db.procedureSQL(sql,JSON.stringify(params),(err,ret)=>{
-    if (err) {
-      res.status(500).json({ code: -1, msg: 'add apply failed', data: null})
-    }else{
-      if (ret[0].err_code===0) {
-        res.status(200).json({ code: 200 })
-      }else{
-        res.status(200).json({ code: 201})
-      }
-    }
-  })
+  let uploadFile = "";
+  var form = new formidable.IncomingForm();
+  form.encoding = 'utf-8';                 
+  form.uploadDir = "upload"; 
+  form.keepExtensions = true;
+  form.maxFieldsSize = 300 * 1024 * 1024;  
+  form.parse(req);
+
+  form.on('field', function(name, value) {
+      if (name==='code') params.code = value;
+      if (name==='log') params.log = JSON.parse(value);
+    })
+    .on('file', function(field, file) {
+      params.file = file.path
+    })
+    .on('end', function() {
+      db.procedureSQL(sql,JSON.stringify(params),(err,ret)=>{
+        if (err) {
+          res.status(500).json({ code: -1, msg: 'add apply failed', data: null})
+        }else{
+          if (ret[0].err_code===0) {
+            res.status(200).json({ code: 200 })
+          }else{
+            res.status(200).json({ code: 201})
+          }
+        }
+      })//end db
+    })//end form
 })
+
+
+
+
+// app.post('/save', function(req, res) {
+//   let sql  = `CALL SAVELOG(?)`;
+//   let params = {
+//     code: req.body.code,
+//     log: req.body.log,
+//   } 
+
+//   db.procedureSQL(sql,JSON.stringify(params),(err,ret)=>{
+//     if (err) {
+//       res.status(500).json({ code: -1, msg: 'add apply failed', data: null})
+//     }else{
+//       if (ret[0].err_code===0) {
+//         res.status(200).json({ code: 200 })
+//       }else{
+//         res.status(200).json({ code: 201})
+//       }
+//     }
+//   })
+// })
 
 app.post('/loglist', function(req, res) {
   var {code} = req.body
