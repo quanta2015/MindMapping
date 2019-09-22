@@ -1,0 +1,36 @@
+<div class="m-user">
+  <div class="m-user-menu">
+    <div class="m-btn m-import">
+      导入数据
+      <input type="file" id="uploadFile"  accept="application/csv"/>
+    </div>
+    <div class="m-btn m-add">添加单词</div>
+  </div>
+  <div class=" m-row-tl">
+    <div class="m-id">ID</div>
+    <div class="m-word">单词</div>
+    <div class="m-symb">发音</div>
+    <div class="m-mean">类型</div>
+    <div class="m-imgw">图片</div>
+    <div class="m-fun">功能</div>
+  </div>
+  {{for word}}
+  <div class="m-row">
+    <div class="m-uid"><input type="text" class="m-edit disabled" value="{{:#index+1}}"></div>
+    <div class="m-id hide"><input type="text" class="m-edit disabled" value="{{:id}}"></div>
+    <div class="m-word"><input type="text" class="m-edit disabled" value="{{:word}}"></div>
+    <div class="m-symb"><input type="text" class="m-edit disabled" value="{{:symb}}" ></div>
+    <div class="m-mean"><input type="text" class="m-edit disabled" value="{{:type}}"></div>
+    <div class="m-imgw"><input type="text" class="m-edit disabled" value="{{:img}}"></div>
+    <div class="m-fun" data-id="{{:id}}">
+      <span class="m-btn m-modify">修改</span> 
+      <span class="m-btn m-delete">删除</span>
+      <span class="m-btn m-save hide">保存</span>
+      <span class="m-btn m-undo hide">取消</span>
+    </div>
+  </div>
+  {{/for}}
+</div>
+
+<ul class="simple-pagination m-page" id="control-page"></ul>
+

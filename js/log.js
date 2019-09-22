@@ -1,12 +1,14 @@
 var _gd
 var _show = true
+var LOG_SIZE = 7
+var LOG_DETAIL_SIZE = 10
+
 
 init()
 
-
 function init() {
   initLog()
-
+  
   $('body').on('click','.m-detail',doDetail)
   $('body').on('click','.m-return',doReturn)
   $('body').on('click','.m-tap-type',doShowGrapy)
@@ -49,25 +51,23 @@ function doDetail(e) {
   let data = { id:id }
 
   promiseTmpl('post','/tmpl/logdetail.tmpl','/logdetail',JSON.stringify(data), true, (r,e)=>{
-    if (e.code === 200) {
       $('.m-log-detail').empty()
       $('.m-log-detail').append($.templates(r).render(e.data, rdHelper))
       
       let COUNT = e.data.logdetail.length
-      let SIZE = 10
-      if (COUNT > SIZE) {
+      if (COUNT > LOG_DETAIL_SIZE) {
         let items = $('.m-row-detail');
-        items.slice(SIZE).hide();
+        items.slice(LOG_DETAIL_SIZE).hide();
 
         $('#log-detail-page').pagination({
           items: COUNT,
-          itemsOnPage: SIZE,
+          itemsOnPage: LOG_DETAIL_SIZE,
           prevText: '&laquo;',
           nextText: '&raquo;',
           hrefTextPrefix: '#',
           onPageClick: function (pageNumber) {
-            var showFrom = SIZE * (pageNumber - 1);
-            var showTo = showFrom + SIZE;
+            var showFrom = LOG_DETAIL_SIZE * (pageNumber - 1);
+            var showTo = showFrom + LOG_DETAIL_SIZE;
             items.hide().slice(showFrom, showTo).show();
           }
         })
@@ -80,10 +80,6 @@ function doDetail(e) {
       typeGrapy(e.data.data.typeData)
       wordGrapy(e.data.data.wordData)
       timeGrapy(e.data.data.timeData)
-
-    }else{
-      toastr.error('取log失败！');
-    }
   })
 }
 
@@ -93,76 +89,70 @@ function initLog() {
   let data = { code:account.code }
 
   promiseTmpl('post','/tmpl/log.tmpl','/loglist',JSON.stringify(data), true, (r,e)=>{
-    if (e.code === 200) {
       $('.m-log-list').empty()
       $('.m-log-list').append($.templates(r).render(e.data, rdHelper))
       
       let COUNT = e.data.log.length
-      let SIZE = 7
       let items = $('.m-row');
-      items.slice(SIZE).hide();
+      items.slice(LOG_SIZE).hide();
 
       $('#log-page').pagination({
         items: COUNT,
-        itemsOnPage: SIZE,
+        itemsOnPage: LOG_SIZE,
         prevText: '&laquo;',
         nextText: '&raquo;',
         hrefTextPrefix: '#',
         onPageClick: function (pageNumber) {
-          var showFrom = SIZE * (pageNumber - 1);
-          var showTo = showFrom + SIZE;
+          var showFrom = LOG_SIZE * (pageNumber - 1);
+          var showTo = showFrom + LOG_SIZE;
           items.hide().slice(showFrom, showTo).show();
         }
-      });
-    }else{
-      toastr.error('取log失败！');
-    }
+      })
+    
   })
 }
 
 
 function timeGrapy(data) {
 
-Highcharts.chart('cont-time', {
+  Highcharts.chart('cont-time', {
     chart: {
-        type: 'bar'
+      type: 'bar'
     },
     title: {
-        text: '操作时间图'
+      text: '操作时间图'
     },
     xAxis: {
-        type: 'category',
-        labels: {
-            rotation: -45  // 设置轴标签旋转角度
-        }
+      type: 'category',
+      labels: {
+        rotation: -45
+      }
     },
     yAxis: {
-        min: 0,
-        title: {
-            text: '操作时间 (秒)'
-        }
+      min: 0,
+      title: {
+        text: '操作时间 (秒)'
+      }
     },
     legend: {
-        enabled: false
+      enabled: false
     },
     tooltip: {
-        pointFormat: '操作时长: <b>{point.y:.0f} 秒</b>'
+      pointFormat: '操作时长: <b>{point.y:.0f} 秒</b>'
     },
     series: [{
-        name: '总人口',
-        data: data,
-        dataLabels: {
-            enabled: true,
-            rotation: -90,
-            color: '#FFFFFF',
-            align: 'right',
-            format: '{point.y:.1f}', // :.1f 为保留 1 位小数
-            y: 10
-        }
+      name: '总人口',
+      data: data,
+      dataLabels: {
+        enabled: true,
+        rotation: -90,
+        color: '#FFFFFF',
+        align: 'right',
+        format: '{point.y:.1f}',
+        y: 10
+      }
     }]
-});
-
-
+  })
 }
 
 

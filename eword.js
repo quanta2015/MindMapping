@@ -12,6 +12,8 @@ var db = require("./db/db")
 var jwt= require('jsonwebtoken')
 var conf = require('./db/conf')
 var formidable = require('formidable')
+var csv = require("csvtojson")
+
 
 const valid = (d) => { return ((typeof(d) != 'undefined')&&(d.length !== 0))?true:false }
 const frmat = (d) => { return d.sort().join('|') }
@@ -49,6 +51,8 @@ app.get('/', function(req, res, next) {
 });
 
 
+
+//用户登录
 app.post('/login', function(req, res) {
   var {usr, pwd} = req.body
   let where = `where usr='${usr}' and pwd = '${pwd}'`
@@ -73,8 +77,9 @@ app.post('/login', function(req, res) {
 })
 
 
+// 保存操作记录和图片
 app.post('/save', function(req, res) {
-  let sql  = `CALL SAVELOG(?)`;
+  let sql  = `CALL LOG_SAVE(?)`;
   let params = {
     code: null,
     log: null,
@@ -112,28 +117,7 @@ app.post('/save', function(req, res) {
 })
 
 
-
-
-// app.post('/save', function(req, res) {
-//   let sql  = `CALL SAVELOG(?)`;
-//   let params = {
-//     code: req.body.code,
-//     log: req.body.log,
-//   } 
-
-//   db.procedureSQL(sql,JSON.stringify(params),(err,ret)=>{
-//     if (err) {
-//       res.status(500).json({ code: -1, msg: 'add apply failed', data: null})
-//     }else{
-//       if (ret[0].err_code===0) {
-//         res.status(200).json({ code: 200 })
-//       }else{
-//         res.status(200).json({ code: 201})
-//       }
-//     }
-//   })
-// })
-
+// 取操作清单
 app.post('/loglist', function(req, res) {
   var {code} = req.body
   let where = `where code='${code}'`
@@ -147,13 +131,164 @@ app.post('/loglist', function(req, res) {
     }else{
       res.status(200).json({
         code: -1,
-        data: null,
+        data: '没有Log数据',
       })
     }
   })
 })
 
 
+// 取用户列表
+app.post('/userlist', function(req, res) {
+  let where = `where type<>0`
+  db.select('account',where,'','', (err,ret)=>{
+    if (ret.length > 0) {
+      res.status(200).json({
+        code: 200,
+        data: { user: ret }
+      })
+    }else{
+      res.status(200).json({
+        code: -1,
+        data: '没有USER数据',
+      })
+    }
+  })
+})
+
+
+// 更新用户
+app.post('/saveuser', function(req, res) {
+  let sql  = `CALL USER_UPDATE(?)`;
+  var params = clone(req.body)
+
+  db.procedureSQL(sql,JSON.stringify(params),(err,ret)=>{
+    if (err) {
+      res.status(500).json({ code: -1, msg: '更新用户失败', data: null})
+    }else{
+      if (ret[0].err_code ===0) {
+        res.status(200).json({ code: 200, msg: ret[0].err_msg })
+      }else{
+        res.status(200).json({ code: 201, msg: '用户已存在' })
+      }
+    }
+  })//end db
+})
+
+// 删除用户
+app.post('/deluser', function(req, res) {
+  let sql  = `CALL USER_DELETE(?)`;
+  var params = clone(req.body)
+
+  db.procedureSQL(sql,JSON.stringify(params),(err,ret)=>{
+    if (err) {
+      res.status(500).json({ code: -1, msg: 'import user failed', data: null})
+    }else{
+      res.status(200).json({ code: 200, data: { user: ret }, msg:'删除数据成功！' })
+    }
+  })//end db
+})
+
+
+
+
+// 导出用户
+app.post('/uploadCSV', function(req, res) {
+  
+  let csvfile,csvtype,sql,params,data
+  let uploadFile = "";
+  let form = new formidable.IncomingForm();
+  form.encoding = 'utf-8';                 
+  form.uploadDir = "upload"; 
+  form.keepExtensions = true;
+  form.maxFieldsSize = 300 * 1024 * 1024;  
+  form.parse(req);
+
+  form.on('field', function(name, value) {
+      if (name==='type') csvtype = value;
+    }).on('file', function(field, file) {
+      csvfile = file.path
+    })
+    .on('end', function() {
+      csv().fromFile(csvfile).then((jsonObj)=>{
+
+        if (csvtype === 'user') {
+          sql  = `CALL USER_IMPORT(?)`
+          params = { user: jsonObj } 
+          data =  { user: null }
+        }else{
+          sql  = `CALL WORD_IMPORT(?)`
+          params = { word: jsonObj } 
+          data =  { word: null }
+        }
+
+        db.procedureSQL(sql,JSON.stringify(params),(err,ret)=>{
+          if (err) {
+            res.status(500).json({ code: -1, msg: '导入数据失败', data: null})
+          }else{
+            if (csvtype === "user") {
+              res.status(200).json({ code: 200, data: { user: ret }, msg:'导入数据成功！' })
+            }else{
+              res.status(200).json({ code: 200, data: { word: ret }, msg:'导入数据成功！' })
+            }
+          }
+        })//end db
+      })
+    })//end form
+})
+
+
+
+
+// 取单词列表
+app.post('/wordlist', function(req, res) {
+  db.select('word','','','', (err,ret)=>{
+    if (err) {
+      res.status(500).json({ code: -1, msg: '取单词数据失败', data: null})
+    }else{
+      res.status(200).json({ code: 200, data: { word: ret }, msg:'取单词数据成功！' })
+    }
+  })
+})
+
+
+// 删除单词
+app.post('/delword', function(req, res) {
+  let sql  = `CALL WORD_DELETE(?)`;
+  var params = clone(req.body)
+
+  db.procedureSQL(sql,JSON.stringify(params),(err,ret)=>{
+    if (err) {
+      res.status(500).json({ code: -1, msg: '删除单词失败', data: null})
+    }else{
+      res.status(200).json({ code: 200, data: { word: ret }, msg:'删除单词成功！' })
+    }
+  })//end db
+})
+
+
+// 更新单词
+app.post('/saveword', function(req, res) {
+  let sql  = `CALL WORD_UPDATE(?)`;
+  var params = clone(req.body)
+
+  db.procedureSQL(sql,JSON.stringify(params),(err,ret)=>{
+    if (err) {
+      res.status(500).json({ code: -1, msg: '更新单词失败', data: null})
+    }else{
+      if (ret[0].err_code ===0) {
+        res.status(200).json({ code: 200, msg: ret[0].err_msg })
+      }else{
+        res.status(200).json({ code: 201, msg: '单词已存在' })
+      }
+    }
+  })//end db
+})
+
+
+
+
+//计算统计结果
 function calcData(list) {
   
   let len = list.length
@@ -259,8 +394,6 @@ function calcData(list) {
     d.push(parseInt(item.cost))
     timeData.push(d)
   })
-
-  // console.log(nlist)
 
 
   // 返回全部统计数据

@@ -95,6 +95,7 @@ body {
     align-items: center;
     /*margin: 5px;*/
     margin: 5px 0 5px 5px;
+    position: relative;
 }
 
 
@@ -194,3 +195,43 @@ body {
 .m-item:last-child {
     margin-bottom: 0;
 }
+
+
+
+.m-item:first-child:before,.m-item:last-child:before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: -5px;
+    width: 5px;
+    background: #ccc;
+    height: 1px;
+}
+
+.m-item:first-child:before {
+    top: 0;
+}
+
+.m-item:last-child:before {
+    bottom: 0;
+}
+
+
+
+.m-item:only-child:after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: -5px;
+    width: 5px;
+    background: #ccc;
+    height: 1px;
+    bottom: 0;
+}
+
+
+
+
+
+
+

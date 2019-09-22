@@ -1,11 +1,11 @@
-// const BASE = "http://47.111.22.103:8080";
-// const BASE_API = "http://47.111.22.103:8080/api";
+// const BASE_API = "http://133.167.73.231:8080"
+const BASE_API = "http://localhost:8080"
 
-// const BASE = "http://127.0.0.1:8080";
-// const BASE_API = "http://127.0.0.1:8080/api";
 
-const BASE_API = "http://133.167.73.231:8080"
-
+const USER_TYPE_ADMIN = 0
+const USER_TYPE_USER  = 1
+const MODULE_USER = 'user'
+const MODULE_WORD = 'word'
 
 /* VARIABLE DEF */
 const MASK = 1
@@ -42,7 +42,15 @@ function promise(method, url, data, isMask, cb) {
   promise
     .then(function (e) {
       $('#i-mask').remove();
-      cb(e);
+      
+      if (e.code === 200) {
+        toastr.info(e.msg)
+        cb(e);
+      }else if (e.code === 201) {
+        toastr.error(e.msg)
+      }else if (e.code === -1) {
+        toastr.error(e.msg)
+      }
     })
     .catch(function (err) {
       $('#i-mask').remove();
@@ -63,8 +71,12 @@ function promiseTmpl(method, tmpl, url, data, isMask, cb) {
       data: data,
     })
   ).done(function (tmpl, e) {
-    $("#i-mask").remove();
-    cb(tmpl[0], e[0]);
+    $("#i-mask").remove()
+    if (e[0].code === 200) {
+      cb(tmpl[0], e[0])
+    }else{
+      toastr.error(e[0].msg)
+    }
   });
 }
 
@@ -91,6 +103,23 @@ function promiseTmplWhen(tmpl, url_a, url_b, isMask, cb) {
       cb(tmpl[0], e1[0], e2[0]);
     });
 }
+
+
+function promiseUpload(url,file,cb){
+  $.ajax({    
+    url: BASE_API + url,
+    type: 'POST',
+    data: file,
+    async:false,
+    cache: false,
+    dataType: "json",
+    processData: false,
+    contentType: false
+  }).done(e=>{
+    cb(e)
+  })
+}
+
 
 
 /* TMPL FUNC DEF */
@@ -179,7 +208,14 @@ async function canvas2Blob() {
   $('.m-item-fun').addClass('hide')
   $('.m-item-cnt').addClass('unheight')
 
-  let ret = await html2canvas(document.querySelector(".m-root")).then(async canvas => {
+  const rootDom = document.querySelector(".m-root")
+  const actW = rootDom.offsetWidth 
+  const actH = rootDom.offsetHeight 
+  const factor = 0.6
+
+  
+
+  let ret = await html2canvas(rootDom, {scale: 1.2, windowWidth: actW * factor, windowHeight: actH * factor}).then(async canvas => {
     // document.body.appendChild(canvas)
     let blob = await new Promise(r => canvas.toBlob(r, "image/jpeg", .7));
     return blob
@@ -194,21 +230,8 @@ async function canvas2Blob() {
 
 
 
-
-function promiseUpload(url,file,cb){
-  // $("body").append(LOADER)
-  var formData = new FormData();
-  formData.append("file", file);
-  $.ajax({    
-    url: HOST + url,
-    type: 'POST',
-    data: formData,
-    async:false,
-    cache: false,
-    dataType: "json",
-    processData: false,
-    contentType: false
-  }).success(e=>{
-    
-  })
+function doLogout() {
+  window.localStorage.removeItem('EWORD_USER')
+  window.localStorage.removeItem('EWORD_WORD')
+  window.location = 'login.html'
 }

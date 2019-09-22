@@ -1,0 +1,92 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+input:disabled {
+    color: #333;
+    border: 1px solid #fff;
+}
+
+.m-admin {
+    width: 100%;
+    display: flex;
+    height: calc( 100vh - 35px );
+    padding: 20px 30px;
+    flex-direction: column;
+}
+
+.m-logo {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 35px;
+    background: #333!important;
+    font-size: 16px!important;
+    margin: 0!important;
+}
+
+.m-menu {
+    display: flex;
+    padding: 5px 10px 5px 200px;
+    background: #eee;
+    position: relative;
+    height: 35px;
+    flex-direction: row-reverse;
+}
+
+
+
+.m-row-tl {
+    display: flex;
+    padding: 5px;
+    border-bottom: 1px solid #dedede;
+    background: #666;
+    color: #fff!important;
+}
+
+.m-row {
+    display: flex;
+    padding: 5px;
+    border-bottom: 1px solid #dedede;
+}
+
+.m-row-tl>div,.m-row>div {
+    flex: 1
+}
+
+.m-edit {
+    padding: 2px 5px;
+    box-sizing: border-box;
+}
+
+
+.m-user {
+    padding: 10px;
+    /* background: #eee; */
+}
+
+.m-user-menu {    
+    padding: 0 0 10px 0;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.m-fun {
+    display: flex;
+    justify-content: center;
+    /*flex-direction:*/
+}
+
+input#uploadFile {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    height: 22px;
+    opacity: 0;
+    z-index: 999;
+    width: 70px;
+}

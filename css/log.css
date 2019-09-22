@@ -45,6 +45,14 @@ body {
     cursor: pointer;
 }
 
+.m-row-tl {
+    display: flex;
+    padding: 5px;
+    border-bottom: 1px solid #dedede;
+    background: #666;
+    color: #fff!important;
+}
+
 .m-row {
     display: flex;
     padding: 5px;
@@ -211,7 +219,4 @@ body {
 }
 
 
-.m-row-tl {
-    background: #666;
-    color: #fff!important;
-}
+

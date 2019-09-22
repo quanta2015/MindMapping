@@ -15,9 +15,13 @@ function doLogin() {
   }
 
   promise('post','/login',JSON.stringify(data), true, (e)=>{
-    window.localStorage.setItem('EWORD_USER', JSON.stringify(e.data.account))
-    window.localStorage.setItem('EWORD_WORD', JSON.stringify(e.data.word))
-    window.location = 'index.html'
+    if (e.data.account.type === USER_TYPE_ADMIN) {
+      window.location = 'admin.html'
+    }else{
+      window.localStorage.setItem('EWORD_USER', JSON.stringify(e.data.account))
+      window.localStorage.setItem('EWORD_WORD', JSON.stringify(e.data.word))
+      window.location = 'index.html'
+    }
   })
 }
 

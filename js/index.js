@@ -20,29 +20,6 @@ function initData() {
 }
 
 function init() {
-  // $('body').on('click','.m-pic',()=>{
-    
-  //   //隐藏叶子节点的虚线框
-  //   $('.m-child').map((index,item)=>{
-  //     if ($(item).children().length ===0) {
-  //       $(item).hide()
-  //     }
-  //   })
-
-  //   //隐藏功能节点
-  //   $('.m-item-fun').addClass('hide')
-  //   $('.m-item-cnt').addClass('unheight')
-
-  //   html2canvas(document.querySelector(".m-root")).then(async canvas => {
-  //       document.body.appendChild(canvas)
-  //       let blob = await new Promise(r => canvas.toBlob(r, "image/jpeg", .7));
-
-  //       console.log(blob)
-  //   });
-  // })
-
-
-
   $('body').on('click','.m-item-cnt', (e)=>{
     e.stopPropagation();
   })
@@ -70,6 +47,8 @@ function init() {
   $('body').on('click','.m-save',doSave)
   $('body').on('click','.m-start',doStart)
   $('body').on('click','.m-log',doLog)
+  $('body').on('click','.m-logout',doLogout)
+  
 
   $('body').on('click', function (e) { 
     let t = e.currentTarget
@@ -123,10 +102,8 @@ function doStart(e) {
 }
 
 async function doSave(e) {
+  // 停止计时器
   _stop = true
-
-  // $('.m-item-fun').addClass('hide')
-  // $('.m-item-cnt').addClass('unheight')
 
   let file = await canvas2Blob()
   var formData = new FormData()
@@ -134,16 +111,7 @@ async function doSave(e) {
   formData.append("code", account.code)
   formData.append("log",  JSON.stringify(log))
 
-  $.ajax({    
-    url: 'http://localhost:8080/save',
-    type: 'POST',
-    data: formData,
-    async:false,
-    cache: false,
-    dataType: "json",
-    processData: false,
-    contentType: false
-  }).then(e=>{
+  promiseUpload('/save',formData,(e)=>{
     if (e.code === 200) {
       toastr.error('保存成功！');
       $('.m-save').addClass('hide');
@@ -151,21 +119,6 @@ async function doSave(e) {
       toastr.error('保存失败！');
     }
   })
-
-  // let code = account.code
-  // let data = {
-  //   code:code,
-  //   log:log
-  // }
-
-  // promise('post','/save',JSON.stringify(data), true, (e)=>{
-  //   if (e.code === 200) {
-  //     toastr.error('保存成功！');
-  //     $('.m-save').addClass('hide');
-  //   }else{
-  //     toastr.error('保存失败！');
-  //   }
-  // })
 }
 
 
