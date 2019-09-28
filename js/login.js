@@ -17,6 +17,7 @@ function doLogin() {
   promise('post','/login',JSON.stringify(data), true, (e)=>{
     if (e.data.account.type === USER_TYPE_ADMIN) {
       window.location = 'admin.html'
+      window.localStorage.setItem('EWORD_USER', JSON.stringify(e.data.account))
     }else{
       window.localStorage.setItem('EWORD_USER', JSON.stringify(e.data.account))
       window.localStorage.setItem('EWORD_WORD', JSON.stringify(e.data.word))

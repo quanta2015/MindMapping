@@ -15,7 +15,7 @@ function initData() {
   })
 
   lib.sort()
-  // lib = ["Banana", "Hamburger", "Tomato", "Ice-cream", "Salad"]
+  lib = ["Banana", "Hamburger", "Tomato", "Ice-cream", "Salad", "Iceeee", "Pewf"]
   max = lib.length
 }
 
@@ -89,7 +89,8 @@ function doTimer() {
 
 
 function doLog() {
-  window.location = 'log.html'
+  account = JSON.parse(window.localStorage.getItem('EWORD_USER'))
+  window.location = `log.html?account=${account.code}`
 }
 
 function doStart(e) {
@@ -229,7 +230,7 @@ function doDel(e) {
   self.remove()
   
   // 修正后续id
-  fixIndex(n)
+  fixIndex(n,lv)
   // 更新word
   updateLib()
   
@@ -237,11 +238,30 @@ function doDel(e) {
   addLog('del',lv,sel_id,val)
 }
 
+
+function fixIndexById(item,level) {
+  let arr = $(item).attr('data-id').split('-')
+  arr[level-1] = parseInt(arr[level-1])-1
+  let id = arr.join('-')
+  $(item).attr('data-id',id)
+  return id
+}
+
 //删除后修改后续item的id
-function fixIndex(e) {
+function fixIndex(e,level) {
   e.map((index,item)=>{
-    let id = parseInt($(item).attr('data-id'))-1
-    $(item).attr('data-id',id)
+    // let arr = $(item).attr('data-id').split('-')
+    // let len = arr.length
+    // arr[level-1] = parseInt(arr[level-1])-1
+    
+    // let id = arr.join('-')
+    let id = fixIndexById(item,level)
+    // $(item).attr('data-id',id)
+    $(item).find('select').attr('class',`s${id}`)
+    $(item).find('.m-item').map((j,ele)=>{
+      fixIndexById(ele,level)
+    })
+
   })
 }
 

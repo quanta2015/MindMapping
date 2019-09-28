@@ -5,11 +5,23 @@ init()
 
 
 function init() {
-  doUserMG()
+
+  let init = getUrlParam('init')
+  
+  if (init === 'test') {
+    doTestMG()
+  }else{
+    doUserMG()
+  }
+
+
+  
 
   $('body').on('click','.m-logout', doLogout)
   $('body').on('click','.m-user-mg',doUserMG)
   $('body').on('click','.m-word-mg',doWordMG)
+  $('body').on('click','.m-test-mg',doTestMG)
+  
   
   
   $('body').on('click','.m-modify' ,doModify)
@@ -142,6 +154,15 @@ function doWordMG() {
   promiseTmpl('post','/tmpl/word.tmpl','/wordlist',null, true, (r,e)=>{
     _tmpl = r
     refreshPage(r,e.data,'word',_size)
+  })
+}
+
+function doTestMG() {
+  _type = MODULE_WORD
+  _size = WORD_SIZE
+  promiseTmpl('post','/tmpl/test.tmpl','/testlist',null, true, (r,e)=>{
+    _tmpl = r
+    refreshPage(r,e.data,'test',_size)
   })
 }
 

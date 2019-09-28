@@ -43,7 +43,14 @@ function doShowGrapy(e) {
 }
 
 function doReturn() {
-  window.location = 'index.html'
+  account = JSON.parse(window.localStorage.getItem('EWORD_USER'))
+  console.log(account.type)
+
+  if (account.type === USER_TYPE_ADMIN) {
+    window.location = 'admin.html?init=test'
+  }else{
+    window.location = 'index.html'
+  }
 }
 
 function doDetail(e) {
@@ -85,8 +92,8 @@ function doDetail(e) {
 
 
 function initLog() {
-  account = JSON.parse(window.localStorage.getItem('EWORD_USER'))
-  let data = { code:account.code }
+  code = getUrlParam('account')
+  let data = { code:code }
 
   promiseTmpl('post','/tmpl/log.tmpl','/loglist',JSON.stringify(data), true, (r,e)=>{
       $('.m-log-list').empty()

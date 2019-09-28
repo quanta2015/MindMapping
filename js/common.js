@@ -15,19 +15,12 @@ const NO_MASK = 0
 /* LODER DEF */
 const LOADER = '<div class="mask" id="i-mask" style="position:absolute; top:0; left:0;right:0; bottom:0;z-index:9999999999;background:rgba(0,0,0, 0.15);display:flex;justify-content: center;align-items: center;"><div class="loaded"><div class="loaders "><div class="loader"><div class="loader-inner ball-spin-fade-loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div></div></div></div>';
 
-
-/* MSG DEF */
-const MSG_COMMENT_SUCCESS = "提交留言成功！";
-const MSG_ERROR = "网络出错！";
-
-
 /* AJAX DEF */
 function renderTmpl(tmpl, cb) {  
   $.ajax({url: tmpl, async: false}).then(function(e) { 
     cb(e);
   });
 }
-
 
 function promise(method, url, data, isMask, cb) {
   isMask ? $('body').append(LOADER) : null;
@@ -164,6 +157,14 @@ function encodeQuery(obj) {
   return params.join('&')
 }
 
+
+// 获取url中的参数
+function getUrlParam(name) {
+  let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+  let r = window.location.search.substr(1).match(reg);
+  if (r != null) return unescape(r[2]); return null;
+}
+
 function getUrlVars()
 {
     var vars = [], hash;
@@ -213,9 +214,7 @@ async function canvas2Blob() {
   const actH = rootDom.offsetHeight 
   const factor = 0.6
 
-  
-
-  let ret = await html2canvas(rootDom, {scale: 1.2, windowWidth: actW * factor, windowHeight: actH * factor}).then(async canvas => {
+  let ret = await html2canvas(rootDom).then(async canvas => {
     // document.body.appendChild(canvas)
     let blob = await new Promise(r => canvas.toBlob(r, "image/jpeg", .7));
     return blob
@@ -223,11 +222,6 @@ async function canvas2Blob() {
 
   return ret
 }
-
-
-
-
-
 
 
 function doLogout() {

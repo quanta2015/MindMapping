@@ -117,6 +117,21 @@ app.post('/save', function(req, res) {
 })
 
 
+
+// 取测试用户列表
+app.post('/testlist', function(req, res) {
+  let sql  = `CALL TEST_LIST()`;
+  db.procedureSQL(sql,(err,ret)=>{
+    if (err) {
+      res.status(500).json({ code: -1, msg: 'import user failed', data: null})
+    }else{
+      res.status(200).json({ code: 200, data: { test: ret[0] }, msg:'测试数据列表！' })
+    }
+  })//end db
+})
+
+
+
 // 取操作清单
 app.post('/loglist', function(req, res) {
   var {code} = req.body
@@ -131,7 +146,7 @@ app.post('/loglist', function(req, res) {
     }else{
       res.status(200).json({
         code: -1,
-        data: '没有Log数据',
+        msg: '尚未进行测试',
       })
     }
   })

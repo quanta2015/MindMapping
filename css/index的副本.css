@@ -151,10 +151,10 @@ body {
 .m-child {
     min-width: 10px;
     min-height: 20px;
-    /*border-left: 1px solid #ccc;*/
-    border: 1px dashed #ccc;
-    margin: 0 5px;
-    /*margin: 5px;*/
+    border-left: 1px solid #ccc;
+    /*border: 1px dashed #ccc;*/
+    /*margin: 0 5px;*/
+    margin: 5px;
 }
 
 
@@ -186,7 +186,7 @@ body {
     flex: 1;
 }
 
-/*
+
 
 .m-item:first-child {
     margin-top: 0;
@@ -196,9 +196,9 @@ body {
     margin-bottom: 0;
 }
 
-*/
 
-/*.m-item:first-child:before,.m-item:last-child:before {
+
+.m-item:first-child:before,.m-item:last-child:before {
     content: '';
     display: block;
     position: absolute;
@@ -227,7 +227,7 @@ body {
     background: #ccc;
     height: 1px;
     bottom: 0;
-}*/
+}
 
 
 

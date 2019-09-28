@@ -1,0 +1,25 @@
+<div class="m-user">
+  <div class=" m-row-tl">
+    <div class="m-id">ID</div>
+    <div class="m-code">学号</div>
+    <div class="m-usr">用户名</div>
+    <div class="m-cls">班级</div>
+    <div class="m-pwd">练习次数</div>
+    <div class="m-fun">功能</div>
+  </div>
+  {{for test}}
+  <div class="m-row">
+    <div class="m-uid">{{:#index+1}}</div>
+    <div class="m-code">{{:code}}</div>
+    <div class="m-usr">{{:usr}}</div>
+    <div class="m-cls">{{:cls}}</div>
+    <div class="m-cls">{{:count}}</div>
+    <div class="m-fun" data-id="{{:id}}">
+      <a href="log.html?account={{:code}}"><span class="m-btn m-detail">详情</span> </a>
+    </div>
+  </div>
+  {{/for}}
+</div>
+
+  <ul class="simple-pagination m-page" id="control-page"></ul>
+
