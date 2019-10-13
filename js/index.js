@@ -136,6 +136,7 @@ function updateLib() {
   $('.m-wl-count').text(lib.length)
   $('.m-wl-time').text('0:00:00')
   $('.m-wl-l').empty()
+  lib.sort()
   lib.map((e,index)=>{
     let item = `<span class="m-word">${e}</span>`
     $('.m-wl-l').append(item)
